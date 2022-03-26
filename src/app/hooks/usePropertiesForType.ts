@@ -2,10 +2,11 @@ import { useMemo } from 'react';
 import { Properties } from '@/constants/Properties';
 import { TokenTypes } from '@/constants/TokenTypes';
 import { PropertyObject } from '@/types/properties';
+import { isPropertyType } from '@/utils/is';
 
-export function usePropertiesForTokenType(type: TokenTypes): (PropertyObject | TokenTypes)[] {
+export function usePropertiesForTokenType(type: TokenTypes): PropertyObject[] {
   return useMemo(() => {
-    const properties: (PropertyObject | TokenTypes)[] = [];
+    const properties: PropertyObject[] = [];
 
     switch (type) {
       case TokenTypes.BORDER_RADIUS:
@@ -73,7 +74,12 @@ export function usePropertiesForTokenType(type: TokenTypes): (PropertyObject | T
         );
         break;
       default:
-        properties.push(type);
+        if (isPropertyType(type)) {
+          properties.push({
+            name: type,
+            label: type,
+          });
+        }
         break;
     }
     return properties;

@@ -99,7 +99,7 @@ function TokenButton({
     });
   }, [dispatch, tokensContext.resolvedTokens]);
 
-  const onClick = React.useCallback((givenProperties: PropertyObject | TokenTypes | (PropertyObject | TokenTypes)[], isActive = active) => {
+  const onClick = React.useCallback((givenProperties: PropertyObject | PropertyObject[], isActive = active) => {
     const propsToSet = Array.isArray(givenProperties) ? givenProperties : [givenProperties];
 
     const tokenValue = name;
