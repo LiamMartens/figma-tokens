@@ -41,7 +41,9 @@ export function getAliasValue(token: SingleToken | string | number, tokens: Sing
       const remainingReferences = findReferences(returnedValue);
 
       if (!remainingReferences) {
-        return convertToRgb(String(checkAndEvaluateMath(String(returnedValue))));
+        const couldBeNumberValue = checkAndEvaluateMath(returnedValue);
+        if (typeof couldBeNumberValue === 'number') return couldBeNumberValue;
+        return convertToRgb(couldBeNumberValue);
       }
     }
   } catch (err) {

@@ -1,6 +1,7 @@
-import {
-  convertToRgb, isTypographyToken, lightOrDark, slugify, checkAndEvaluateMath, isSingleToken,
-} from './utils';
+import { convertToRgb, lightOrDark } from '@/utils/color';
+import { isSingleToken, isTypographyToken } from '@/utils/is';
+import { checkAndEvaluateMath } from '@/utils/math';
+import { slugify } from '@/utils/string';
 
 describe('checkAndEvaluateMath', () => {
   it('calculates math', () => {

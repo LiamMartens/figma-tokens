@@ -125,6 +125,7 @@ export const tokenState = createModel<RootModel>()({
     }),
     setTokenData: (state, data: SetTokenDataPayload) => {
       const values = parseTokenValues(data.values);
+      console.log('values', values);
       const tokenSets = data.usedTokenSet ? Object.keys(data.values).filter((set) => data.usedTokenSet?.includes(set)) : [Object.keys(values)[0]];
       return {
         ...state,
