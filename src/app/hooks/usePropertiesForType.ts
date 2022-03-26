@@ -3,9 +3,9 @@ import { Properties } from '@/constants/Properties';
 import { TokenTypes } from '@/constants/TokenTypes';
 import { PropertyObject } from '@/types/properties';
 
-export function usePropertiesForTokenType(type: TokenTypes): PropertyObject[] {
+export function usePropertiesForTokenType(type: TokenTypes): (PropertyObject | TokenTypes)[] {
   return useMemo(() => {
-    const properties: PropertyObject[] = [];
+    const properties: (PropertyObject | TokenTypes)[] = [];
 
     switch (type) {
       case TokenTypes.BORDER_RADIUS:
@@ -73,6 +73,7 @@ export function usePropertiesForTokenType(type: TokenTypes): PropertyObject[] {
         );
         break;
       default:
+        properties.push(type);
         break;
     }
     return properties;
