@@ -31,7 +31,7 @@ function TokenListing({
   const [isIntCollapsed, setIntCollapsed] = React.useState(false);
 
   const showForm = React.useCallback(({ token, name, isPristine = false }: ShowFormOptions) => {
-    const tokenValue = (token?.value || typeof schema?.value === 'object' ? schema.value : '') ?? '';
+    const tokenValue = token?.value ?? (typeof schema?.value === 'object' ? schema.value : '');
 
     // @TODO fix these typings depending on usage
     dispatch.uiState.setShowEditForm(true);

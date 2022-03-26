@@ -1,12 +1,11 @@
 import { useMemo } from 'react';
-import { DocumentationProperties } from '@/constants/DocumentationProperties';
 import { Properties } from '@/constants/Properties';
 import { TokenTypes } from '@/constants/TokenTypes';
 import { PropertyObject } from '@/types/properties';
 
 export function usePropertiesForTokenType(type: TokenTypes): PropertyObject[] {
   return useMemo(() => {
-    const properties = [...DocumentationProperties];
+    const properties: PropertyObject[] = [];
 
     switch (type) {
       case TokenTypes.BORDER_RADIUS:
