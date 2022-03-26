@@ -1,4 +1,5 @@
-import * as React from 'react';
+import '../wdyr';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import JSONEditor from './JSONEditor';
 import SyncSettings from './SyncSettings';

@@ -1,5 +1,7 @@
 import { SingleToken } from '@/types/tokens';
-import { isTypographyToken, isValueToken } from '../app/components/utils';
+import { isSingleTokenValueObject, isTypographyToken } from './is';
+
+// @TODO fix typings
 
 function checkForTokens({
   obj,
@@ -11,13 +13,13 @@ function checkForTokens({
   // replaces / in token name
   let returnValue;
   const shouldExpandTypography = expandTypography ? isTypographyToken(token.value) : false;
-  if (isValueToken(token) && !shouldExpandTypography) {
+  if (isSingleTokenValueObject(token) && !shouldExpandTypography) {
     returnValue = token;
   } else if (isTypographyToken(token) && !expandTypography) {
     returnValue = {
       type: 'typography',
       value: Object.entries(token).reduce((acc, [key, val]) => {
-        acc[key] = isValueToken(val) && returnValuesOnly ? val.value : val;
+        acc[key] = isSingleTokenValueObject(val) && returnValuesOnly ? val.value : val;
         return acc;
       }, {}),
     };
@@ -28,7 +30,7 @@ function checkForTokens({
     }
   } else if (typeof token === 'object') {
     let tokenToCheck = token;
-    if (isValueToken(token)) {
+    if (isSingleTokenValueObject(token)) {
       tokenToCheck = token.value;
     }
     Object.entries(tokenToCheck).map(([key, value]) => {

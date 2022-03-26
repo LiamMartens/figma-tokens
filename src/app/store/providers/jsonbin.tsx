@@ -1,15 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from '@/app/store';
-import { StorageProviderType } from '@/types/api';
+import { ContextObject, StorageProviderType } from '@/types/api';
 import { MessageToPluginTypes } from '@/types/messages';
-import { TokenProps } from '@/types/tokens';
 import convertTokensToObject from '@/utils/convertTokensToObject';
 import { notifyToUI, postToFigma } from '../../../plugin/notifiers';
-import { compareUpdatedAt } from '../../components/utils';
 import * as pjs from '../../../../package.json';
 import useStorage from '../useStorage';
+import { compareUpdatedAt } from '@/utils/date';
+import { TokenStore } from '@/types/tokens';
 
-async function readTokensFromJSONBin({ secret, id }): Promise<TokenProps> | null {
+// @TODO fix typings
+
+async function readTokensFromJSONBin({ secret, id }: ContextObject): Promise<TokenStore | null> {
   const response = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, {
     method: 'GET',
     mode: 'cors',
@@ -29,7 +31,7 @@ async function readTokensFromJSONBin({ secret, id }): Promise<TokenProps> | null
   return null;
 }
 
-async function writeTokensToJSONBin({ secret, id, tokenObj }): Promise<TokenProps> | null {
+async function writeTokensToJSONBin({ secret, id, tokenObj }): Promise<TokenStore> | null {
   const response = await fetch(`https://api.jsonbin.io/v3/b/${id}`, {
     method: 'PUT',
     mode: 'cors',
@@ -90,7 +92,7 @@ export function useJSONbin() {
   const { setStorageType } = useStorage();
   const { tokens } = useSelector((state: RootState) => state.tokenState);
 
-  async function createNewJSONBin(context): Promise<TokenProps> {
+  async function createNewJSONBin(context): Promise<TokenStore> {
     const { secret, name, updatedAt } = context;
     const response = await fetch('https://api.jsonbin.io/v3/b', {
       method: 'POST',
@@ -144,7 +146,7 @@ export function useJSONbin() {
 
   // Read tokens from JSONBin
 
-  async function pullTokensFromJSONBin(context): Promise<TokenProps> {
+  async function pullTokensFromJSONBin(context: ContextObject): Promise<TokenStore> {
     const { id, secret, name } = context;
 
     if (!id && !secret) return;
@@ -180,7 +182,7 @@ export function useJSONbin() {
     }
   }
 
-  async function addJSONBinCredentials(context): Promise<TokenProps> {
+  async function addJSONBinCredentials(context: ContextObject): Promise<TokenStore> {
     const tokenValues = await pullTokensFromJSONBin(context);
 
     if (tokenValues) {

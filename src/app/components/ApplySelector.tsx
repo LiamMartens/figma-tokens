@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import * as React from 'react';
+import React from 'react';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { styled } from '@/stitches.config';
 import { UpdateMode } from '@/types/state';

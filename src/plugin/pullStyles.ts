@@ -1,8 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { figmaRGBToHex } from '@figma-plugin/helpers';
-import { SingleToken } from '@/types/tokens';
-import { ColorToken, ShadowTokenSingleValue } from '@/types/propertyTypes';
-import { slugify } from '../app/components/utils';
+import { SingleBoxShadowToken, SingleColorToken, SingleToken } from '@/types/tokens';
 import { convertBoxShadowTypeFromFigma } from './figmaTransforms/boxShadow';
 import { convertFigmaGradientToString } from './figmaTransforms/gradients';
 import { convertFigmaToLetterSpacing } from './figmaTransforms/letterSpacing';
@@ -11,6 +9,7 @@ import { convertFigmaToTextCase } from './figmaTransforms/textCase';
 import { convertFigmaToTextDecoration } from './figmaTransforms/textDecoration';
 import { notifyStyleValues } from './notifiers';
 import { PullStyleOptions } from '@/types';
+import { slugify } from '@/utils/string';
 
 export default function pullStyles(styleTypes: PullStyleOptions): void {
   // @TODO should be specifically typed according to their type
@@ -31,7 +30,7 @@ export default function pullStyles(styleTypes: PullStyleOptions): void {
       .filter((style) => style.paints.length === 1)
       .map((style) => {
         const paint = style.paints[0];
-        let styleObject: ColorToken = {} as ColorToken;
+        let styleObject: SingleColorToken = {} as SingleColorToken;
         if (style.description) {
           styleObject.description = style.description;
         }
@@ -195,9 +194,10 @@ export default function pullStyles(styleTypes: PullStyleOptions): void {
       .getLocalEffectStyles()
       .filter((style) => style.effects.every((effect) => ['DROP_SHADOW', 'INNER_SHADOW'].includes(effect.type)))
       .map((style) => {
+        // @TODO fix typings
         // convert paint to object containg x, y, spread, color
-        const shadows: ShadowTokenSingleValue[] = style.effects.map((effect) => {
-          const effectObject: ShadowTokenSingleValue = {} as ShadowTokenSingleValue;
+        const shadows: SingleBoxShadowToken['value'][] = style.effects.map((effect) => {
+          const effectObject: SingleBoxShadowToken['value'] = {} as SingleBoxShadowToken['value'];
 
           effectObject.color = figmaRGBToHex(effect.color);
           effectObject.type = convertBoxShadowTypeFromFigma(effect.type);

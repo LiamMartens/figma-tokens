@@ -19,6 +19,8 @@ export enum TokenTypes {
   TEXT_DECORATION = 'textDecoration',
   TEXT_CASE = 'textCase',
 
-  // @deprecated ?
+  // @deprecated
   BORDER = 'border',
+  // @deprecated - should not be used
+  UNDEFINED = 'undefined',
 }

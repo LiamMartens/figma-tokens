@@ -2,32 +2,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Octokit } from '@octokit/rest';
 import { Dispatch, RootState } from '@/app/store';
 import { MessageToPluginTypes } from '@/types/messages';
-import { TokenProps } from '@/types/tokens';
 import convertTokensToObject from '@/utils/convertTokensToObject';
 import useConfirm from '@/app/hooks/useConfirm';
 import usePushDialog from '@/app/hooks/usePushDialog';
 import IsJSONString from '@/utils/isJSONString';
 import { ContextObject } from '@/types/api';
 import { notifyToUI, postToFigma } from '../../../plugin/notifiers';
+import { TokenStore } from '@/types/tokens';
+
+// @TODO fix typings
 
 /** Returns a URL to a page where the user can create a pull request with a given branch */
 export function getCreatePullRequestUrl(id: string, branchName: string) {
   return `https://github.com/${id}/compare/${branchName}?expand=1`;
 }
 
-function hasSameContent(content, storedContent) {
+// @TODO fix values typing
+function hasSameContent(content: { values: any }, storedContent: string) {
   const stringifiedContent = JSON.stringify(content.values, null, 2);
 
   return stringifiedContent === storedContent;
 }
 
-export const fetchBranches = async ({ context, owner, repo }) => {
+export const fetchBranches = async ({ context, owner, repo }: { context: ContextObject, owner: string; repo: string }) => {
   const octokit = new Octokit({ auth: context.secret, baseUrl: context.baseUrl });
   const branches = await octokit.repos.listBranches({ owner, repo }).then((response) => response.data);
   return branches.map((branch) => branch.name);
 };
 
-export const checkPermissions = async ({ context, owner, repo }) => {
+export const checkPermissions = async ({ context, owner, repo }: { context: ContextObject, owner: string; repo: string }) => {
   try {
     const octokit = new Octokit({ auth: context.secret, baseUrl: context.baseUrl });
 
@@ -49,7 +52,7 @@ export const checkPermissions = async ({ context, owner, repo }) => {
   }
 };
 
-export const readContents = async ({ context, owner, repo }) => {
+export const readContents = async ({ context, owner, repo }: { context: ContextObject, owner: string; repo: string }) => {
   const octokit = new Octokit({ auth: context.secret, baseUrl: context.baseUrl });
   let response;
 
@@ -145,7 +148,7 @@ export function useGitHub() {
     repo: string;
     commitMessage?: string;
     customBranch?: string;
-  }): Promise<TokenProps | null> {
+  }): Promise<TokenStore | null> {
     try {
       const branches = await fetchBranches({ context, owner, repo });
       const branch = customBranch || context.branch;
@@ -238,7 +241,7 @@ export function useGitHub() {
   }
 
   // Function to initially check auth and sync tokens with GitHub
-  async function syncTokensWithGitHub(context): Promise<TokenProps> {
+  async function syncTokensWithGitHub(context): Promise<TokenStore> {
     try {
       const [owner, repo] = context.id.split('/');
       const hasBranches = await fetchBranches({ context, owner, repo });
@@ -271,7 +274,7 @@ export function useGitHub() {
     }
   }
 
-  async function addNewGitHubCredentials(context): Promise<TokenProps> {
+  async function addNewGitHubCredentials(context): Promise<TokenStore> {
     let { raw: rawTokenObj } = getTokenObj();
 
     const data = await syncTokensWithGitHub(context);
