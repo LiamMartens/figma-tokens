@@ -34,14 +34,15 @@ function TokenButton({
 }) {
   const tokensContext = React.useContext(TokensContext);
   const uiState = useSelector((state: RootState) => state.uiState);
-  const { activeTokenSet } = useSelector((state: RootState) => state.tokenState);
+  const activeTokenSet = useSelector((state: RootState) => state.tokenState.activeTokenSet);
   const { setNodeData } = useTokens();
   const { deleteSingleToken, duplicateSingleToken } = useManageTokens();
   const dispatch = useDispatch<Dispatch>();
 
-  const displayValue = React.useMemo(() => (
-    getAliasValue(token, tokensContext.resolvedTokens)
-  ), [token, tokensContext.resolvedTokens]);
+  const displayValue = React.useMemo(() => 'test', []);
+  // const displayValue = React.useMemo(() => (
+  //   getAliasValue(token, tokensContext.resolvedTokens)
+  // ), [token, tokensContext.resolvedTokens]);
 
   const { name } = token;
   // Only show the last part of a token in a group

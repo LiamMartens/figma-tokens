@@ -68,6 +68,4 @@ function Tokens({ isActive }: { isActive: boolean }) {
   );
 }
 
-Tokens.whyDidYouRender = true;
-
 export default Tokens;
